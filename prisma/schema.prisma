@@ -1,0 +1,70 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ROLE {
+  ADMIN
+  USER
+}
+
+model Users {
+  id Int @id @default(autoincrement())
+  email String @unique
+  username String
+  password String
+  profilePicture String?
+  role ROLE
+  companyPosition CompanyPosition @relation(fields: [companyPositionId], references: [id])
+  companyPositionId Int
+  post Post[]
+  following Follow[] @relation("Follow_base_user")
+  followed Follow[] @relation("Follow_following_user")
+}
+  
+model CompanyPosition {
+  id Int @id @default(autoincrement())
+  companyId Int
+  positionId Int
+  company Company @relation(fields: [companyId], references: [id])
+  position Position @relation(fields: [positionId], references: [id])
+  users Users[]
+}
+
+model Company {
+  id Int @id @default(autoincrement())
+  companyName String
+  companyDetails String? @db.Text
+  companyPosition CompanyPosition[]
+}
+
+model Position {
+  id Int @id @default(autoincrement())
+  positionName String
+  companyPosition CompanyPosition[]
+}
+
+model Post {
+  id Int @id @default(autoincrement())
+  body String @db.Text
+  user_id Int
+  user Users @relation(fields: [user_id], references: [id])
+}
+
+model Follow {
+  id Int @id @default(autoincrement())
+  base_user_id Int
+  followed_user_id Int
+  base_user Users @relation("Follow_base_user", fields: [base_user_id], references: [id])
+  follower_user Users @relation("Follow_following_user", fields: [followed_user_id], references: [id])
+}
