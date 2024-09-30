@@ -1,21 +1,19 @@
 import express from "express";
-import * as UsersController from "../controllers/users.js";
+import * as FollowController from "../controllers/follows.js";
+import { verifyToken } from "../middlewares/middlewares.js";
 
 const router = express.Router();
 
-// Get all users data
-router.route("/").get(UsersController.getAllUsers);
+// Get user follower list
+router.route("/followers").get(verifyToken, FollowController.getUserFollower);
 
-// Get user data by id
-router.route("/:id").get(UsersController.getUserById);
+// Get user following list
+router.route("/following").get(verifyToken, FollowController.getUserFollowing);
 
-// Create new user
-router.route("/create").post(UsersController.createNewUser);
+// Add new following
+router.route("/follow").post(verifyToken, FollowController.followUser);
 
-// Update user by id
-router.route("/update/:id").patch(UsersController.updateUserById);
-
-// Delete user by id
-router.route("/delete/:id").delete(UsersController.deleteUserById);
+// Remove user from following
+router.route("/unfollow").post(verifyToken, FollowController.unfollowUser);
 
 export default router;

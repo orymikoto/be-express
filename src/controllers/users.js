@@ -20,7 +20,13 @@ export const getAllUsers = async (req, res) => {
 // Get user by id
 export const getUserById = async (req, res) => {
   try {
-    const user = await prisma.users.findFirst({ where: { id: req.params.id } });
+    // console.log(req);
+    const user = await prisma.users.findFirst({
+      where: { email: req.user.email },
+      omit: {
+        password: true,
+      },
+    });
     return res.status(200).json({ message: "User data retreived", data: user });
   } catch (error) {
     res.status(500).json({
@@ -33,19 +39,16 @@ export const getUserById = async (req, res) => {
 // Create new user
 export const createNewUser = async (req, res) => {
   try {
-    const companies = await prisma.companyPosition.create({
-      data: {
-        positionId: req.body.position_id,
-        companyId: req.body.company_id,
-      },
-    });
     const user = await prisma.users.create({
       data: {
         email: req.body.email,
-        password: await bcryptjs.hashSync(req.body.password, 8),
+        name: req.body.name,
+        headlines: req.body.headlines,
+        about: req.body.about,
+        password: await bcryptjs.hash(req.body.password, 8),
         profilePicture: req.body.profile_picture,
         role: req.body.role,
-        companyPositionId: companies.id,
+        companyPositionId: req.body.id,
       },
     });
     return res
@@ -66,16 +69,11 @@ export const updateUserById = async (req, res) => {
       where: { id: req.params.id },
       data: {
         email: req.body.email,
-        password: await bcryptjs.hashSynch(req.body.password, 8),
+        headlines: req.body.headlines,
+        about: req.body.about,
+        password: await bcryptjs.hash(req.body.password, 8),
         profilePicture: req.body.profile_picture,
-      },
-    });
-
-    const companies = await prisma.companyPosition.update({
-      where: { id: user.companyPositionId },
-      data: {
-        companyId: req.body.companies_id,
-        positionId: req.body.position_id,
+        companyPositionId: req.body.company_position_id,
       },
     });
 

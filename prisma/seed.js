@@ -77,7 +77,10 @@ async function main() {
   // seeder user
   const data_users = [
     {
-      username: "miklirianto",
+      name: "miklirianto",
+      headlines: "Full Stack Developer | Freelancer",
+      about:
+        "Hello I am Mikli Oktarianto, I am currently active Student at Jember University. I am currently interested and active to learning Back End Development. I also have slight interest at competitive programming and game development.",
       email: "mikli@mail.com",
       password: bcrypt.hashSync("123456", 10),
       role: "ADMIN",
@@ -85,7 +88,8 @@ async function main() {
       profilePicture: faker.image.avatar(),
     },
     {
-      username: "riezquibnanta",
+      name: "riezquibnanta",
+      headlines: "Technical Team at Kubo Studios LTD",
       email: "riezqu@mail.com",
       password: bcrypt.hashSync("123456", 10),
       role: "ADMIN",
@@ -93,7 +97,8 @@ async function main() {
       profilePicture: faker.image.avatar(),
     },
     {
-      username: "admindosen",
+      name: "admindosen",
+      headlines: "Professor at Jember University",
       email: "admin@mail.com",
       password: bcrypt.hashSync("admin123", 10),
       role: "ADMIN",
@@ -101,7 +106,8 @@ async function main() {
       profilePicture: faker.image.avatar(),
     },
     {
-      username: "usertest",
+      name: "usertest",
+      headlines: "User of this app",
       email: "user@mail.com",
       password: bcrypt.hashSync("123", 10),
       role: "USER",
@@ -111,8 +117,9 @@ async function main() {
   ];
   for (let i = 1; i <= 10; i++) {
     data_users.push({
-      username: faker.internet.userName(),
+      name: faker.internet.userName(),
       email: faker.internet.email(),
+      headlines: faker.person.jobDescriptor(),
       password: bcrypt.hashSync("123456", 10),
       role: "USER",
       companyPositionId: faker.number.int({ min: 1, max: 6 }),

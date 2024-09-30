@@ -1,6 +1,8 @@
 import express from "express";
-import userRoute from "./users.js";
-import companyRoute from "./companies.js";
+import UserRouter from "./users.js";
+import CompanyRouter from "./companies.js";
+import AuthRouter from "./auth.js";
+import FollowRouter from "./follows.js";
 
 const router = express.Router();
 
@@ -11,14 +13,16 @@ router.get("/", (req, res) => {
   });
 });
 
-router.use("/user", userRoute);
+router.use("/user", UserRouter);
 
-router.use("/company", companyRoute);
+router.use("/company", CompanyRouter);
+
+router.use("/auth", AuthRouter);
 
 // router.use("/position");
 
 // router.use("/post");
 
-// router.use("/follow");
+router.use("/relation", FollowRouter);
 
 export default router;

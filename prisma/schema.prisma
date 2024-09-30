@@ -6,6 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["omitApi"]
 }
 
 datasource db {
@@ -21,23 +22,25 @@ enum ROLE {
 model Users {
   id Int @id @default(autoincrement())
   email String @unique
-  username String
+  name String
   password String
+  headlines String
+  about String?
   profilePicture String?
-  role ROLE
-  companyPosition CompanyPosition @relation(fields: [companyPositionId], references: [id])
-  companyPositionId Int
+  role ROLE @default(USER)
+  companyPosition CompanyPosition? @relation(fields: [companyPositionId], references: [id], onDelete: SetNull)
+  companyPositionId Int?
   post Post[]
   following Follow[] @relation("Follow_base_user")
   followed Follow[] @relation("Follow_following_user")
 }
-  
+
 model CompanyPosition {
   id Int @id @default(autoincrement())
   companyId Int
   positionId Int
-  company Company @relation(fields: [companyId], references: [id])
-  position Position @relation(fields: [positionId], references: [id])
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  position Position @relation(fields: [positionId], references: [id], onDelete: Cascade)
   users Users[]
 }
 
@@ -58,13 +61,14 @@ model Post {
   id Int @id @default(autoincrement())
   body String @db.Text
   user_id Int
-  user Users @relation(fields: [user_id], references: [id])
+  user Users @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 model Follow {
   id Int @id @default(autoincrement())
   base_user_id Int
   followed_user_id Int
-  base_user Users @relation("Follow_base_user", fields: [base_user_id], references: [id])
-  follower_user Users @relation("Follow_following_user", fields: [followed_user_id], references: [id])
+  base_user Users @relation("Follow_base_user", fields: [base_user_id], references: [id], onDelete: Cascade )
+  follower_user Users @relation("Follow_following_user", fields: [followed_user_id], references: [id], onDelete: Cascade)
+  @@unique([base_user_id, followed_user_id])
 }

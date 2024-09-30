@@ -1,5 +1,6 @@
 import express from "express";
 import * as UsersController from "../controllers/users.js";
+import { verifyToken } from "../middlewares/middlewares.js";
 
 const router = express.Router();
 
@@ -7,7 +8,7 @@ const router = express.Router();
 router.route("/").get(UsersController.getAllUsers);
 
 // Get user data by id
-router.route("/:id").get(UsersController.getUserById);
+router.route("/detail").get(verifyToken, UsersController.getUserById);
 
 // Create new user
 router.route("/create").post(UsersController.createNewUser);
