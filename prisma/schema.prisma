@@ -26,6 +26,7 @@ model Users {
   password String
   headlines String
   about String?
+  bannerPicture String?
   profilePicture String?
   role ROLE @default(USER)
   companyPosition CompanyPosition? @relation(fields: [companyPositionId], references: [id], onDelete: SetNull)

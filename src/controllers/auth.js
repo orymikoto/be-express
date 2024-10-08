@@ -11,6 +11,7 @@ export const login = async (req, res) => {
         email: req.body.email,
       },
     });
+    // console.log(users);
     if (!users) {
       return res.status(401).json({
         message: "Invalid Credentials!",
@@ -32,6 +33,7 @@ export const login = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+
     return res.status(500).json({
       message: "Something went wrong! authentication system error.",
       error: error,
